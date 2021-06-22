@@ -13,7 +13,7 @@ class GuildService:
 
         members = []
         for member in guild.members:
-            if members.bot == True:
+            if member.bot == True:
                 continue
 
             members.append(member)
