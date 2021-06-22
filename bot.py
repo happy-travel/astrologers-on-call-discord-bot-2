@@ -34,8 +34,9 @@ async def ping(ctx):
 @slash.slash(name='scripter', description='Slay a sacrifice!', guild_ids=[GUILD_ID])
 async def get_scripter(ctx):
     try:
+        restrictd_member_ids = config['app']['restrictdMemberIds']
         service = ScripterService(bot)
-        member = service.get(GUILD_ID)
+        member = service.get(GUILD_ID, restrictd_member_ids)
 
         message: str
         if member is None:

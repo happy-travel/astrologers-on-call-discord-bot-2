@@ -13,7 +13,7 @@ class GuildService:
 
         members = []
         for member in guild.members:
-            if member.bot == True:
+            if member.bot is True:
                 continue
 
             members.append(member)
@@ -25,7 +25,7 @@ class GuildService:
 
         online_members = []
         for member in members:
-            if member.status == discord.Status.online:
+            if member.status is discord.Status.online:
                 online_members.append(member)
 
         return online_members
