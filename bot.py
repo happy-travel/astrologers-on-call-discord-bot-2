@@ -1,8 +1,8 @@
+import json
+import os
 import discord
 from discord.ext import commands
 from discord_slash import SlashCommand
-import json
-import os
 from commands.scripter import ScripterService
 
 
@@ -34,17 +34,14 @@ async def ping(ctx):
 @slash.slash(name='scripter', description='Slay a sacrifice!', guild_ids=[GUILD_ID])
 async def get_scripter(ctx):
     try:
-        restrictd_member_ids = config['app']['restrictdMemberIds']
+        restricted_member_ids = config['app']['restrictdMemberIds']
         service = ScripterService(bot)
-        member = service.get(GUILD_ID, restrictd_member_ids)
 
-        message: str
-        if member is None:
-            message = '🔮 Astrologers announced that there is none to choose from 🔮'
-            await ctx.send(message)
-            return
-        
-        message = f'📜 Astrologers hast chosen {member.mention}'
+        member = service.get(GUILD_ID, restricted_member_ids)
+        message = ('🔮 Astrologers announced that there is none to choose from 🔮'
+                   if member is None
+                   else f'📜 Astrologers hast chosen {member.mention}')
+
         await ctx.send(message)
     except Exception as e:
         await ctx.send(format_exception(e))

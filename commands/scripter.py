@@ -1,21 +1,21 @@
 from typing import Optional
-import discord
 import random
-from api.guilds import GuildService
+import discord
 from discord.ext import commands
+from api.guilds import GuildService
 
 
 class ScripterService:
-    discord_client: commands.Bot
+    _discord_client: commands.Bot
 
     def __init__(self, discord_client: commands.Bot) -> None:
-        self.discord_client = discord_client
+        self._discord_client = discord_client
 
-    def get(self, guild_id: int, forbidden_member_ids: Optional[list[int]] = None) -> Optional[discord.Member]:
-        guild_service = GuildService(self.discord_client)
+    def get(self, guild_id: int, forbidden_member_ids: list[int] = []) -> Optional[discord.Member]:
+        guild_service = GuildService(self._discord_client)
         members = guild_service.get_online_members(guild_id)
 
-        if forbidden_member_ids is not None:
+        if forbidden_member_ids:
             members = [x for x in members if x not in forbidden_member_ids]
 
         member_count = len(members)

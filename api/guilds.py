@@ -3,29 +3,15 @@ from discord.ext import commands
 
 
 class GuildService:
-    discord_client: commands.Bot
+    _discord_client: commands.Bot
 
     def __init__(self, discord_client: commands.Bot) -> None:
-        self.discord_client = discord_client
+        self._discord_client = discord_client
 
     def get_members(self, guild_id: int) -> list[discord.Member]:
-        guild = self.discord_client.get_guild(guild_id)
-
-        members = []
-        for member in guild.members:
-            if member.bot is True:
-                continue
-
-            members.append(member)
-
-        return members
+        guild = self._discord_client.get_guild(guild_id)
+        return [x for x in guild.members if x.bot is not True]
 
     def get_online_members(self, guild_id: int) -> list[discord.Member]:
         members = self.get_members(guild_id)
-
-        online_members = []
-        for member in members:
-            if member.status is discord.Status.online:
-                online_members.append(member)
-
-        return online_members
+        return [x for x in members if x.status is discord.Status.online]
