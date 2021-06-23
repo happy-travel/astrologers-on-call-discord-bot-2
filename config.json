@@ -1,7 +1,7 @@
 {
   "app": {
     "guildId": 567473798144851988,
-    "restrictdMemberIds": [
+    "restrictedMemberIds": [
       572891292019851298,
       557534145664778270
     ]
