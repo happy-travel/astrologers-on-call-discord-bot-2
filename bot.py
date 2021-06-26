@@ -3,11 +3,16 @@ import os
 import discord
 from discord.ext import commands
 from discord_slash import SlashCommand
+import coloredlogs
+from commands.proclaimer import ProclamationService
 from commands.scripter import ScripterService
+
+coloredlogs.install(
+    fmt='{"created_at": "%(asctime)s.%(msecs)06dZ", "process": "%(name)s[%(process)d]", "log_level": "%(levelname)s", "message": "%(message)s"}', datefmt='%Y-%m-%dT%H:%M:%S')
 
 
 def format_exception(e) -> str:
-    return f'🔮 astrologers hast discovered their wit: "{e}"'
+    return f"🔮 Astrolog'rs hast discovered their wit: '{e}'"
 
 
 def read_config():
@@ -31,6 +36,27 @@ async def ping(ctx):
     await ctx.send('pong')
 
 
+@slash.slash(name='proclaim', description='Hear the prediction for the next week', guild_ids=[GUILD_ID])
+async def get_scripter(ctx):
+    try:
+        service = ProclamationService(bot)
+
+        proclamation_correction_coefficient = config['app']['proclamationCorrectionCoefficient']
+        proclamation_engineer_ids = config['app']['proclamationEngineerIds']
+
+        proclaimed = service.get(
+            proclamation_engineer_ids, proclamation_correction_coefficient)
+        next_proclaimed = service.get(
+            proclamation_engineer_ids, proclamation_correction_coefficient + 1)
+
+        message = (
+            f"🔮 Astrolog'rs has't did declare this week to beest {proclaimed.mention}'s week. {proclaimed.mention} doubles the numb'r of did close bugs 🔮 {next_proclaimed.mention} appears on the h'rizon")
+
+        await ctx.send(message)
+    except Exception as e:
+        await ctx.send(format_exception(e))
+
+
 @slash.slash(name='scripter', description='Slay a sacrifice!', guild_ids=[GUILD_ID])
 async def get_scripter(ctx):
     try:
@@ -38,9 +64,9 @@ async def get_scripter(ctx):
         service = ScripterService(bot)
 
         member = service.get(GUILD_ID, restricted_member_ids)
-        message = ('🔮 Astrologers announced that there is none to choose from 🔮'
+        message = ("🔮 Astrolog'rs did announce yond th're is none to chooseth from 🔮"
                    if member is None
-                   else f'📜 Astrologers hast chosen {member.mention}')
+                   else f"📜 Astrolog'rs has't chosen {member.mention}")
 
         await ctx.send(message)
     except Exception as e:
