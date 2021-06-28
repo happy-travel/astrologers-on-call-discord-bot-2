@@ -15,3 +15,6 @@ class GuildService:
     def get_online_members(self, guild_id: int) -> list[discord.Member]:
         members = self.get_members(guild_id)
         return [x for x in members if x.status is discord.Status.online]
+
+    def get_user(self, user_id: int) -> discord.User:
+        return self._discord_client.get_user(user_id)
