@@ -17,7 +17,7 @@ steps:
     GITHUB_TOKEN:
       from_secret: GITHUB_TOKEN
     HTDC_ON_CALL_DISCORD_TOKEN:
-      from_secret: HTDC_ON_CALL_DISCORD_TOKEN   
+      from_secret: HTDC_ON_CALL_DISCORD_TOKEN
     BUILD_VERSION: ${DRONE_COMMIT_SHA:0:7}
   settings:
     registry: registry.happytravel.com
