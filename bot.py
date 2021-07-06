@@ -3,7 +3,9 @@ import os
 import discord
 from discord.ext import commands
 from discord_slash import SlashCommand
+from discord_slash.utils.manage_commands import create_option
 import coloredlogs
+from commands.participants import ParticipantsService
 from commands.proclaimer import ProclamationService
 from commands.scripter import ScripterService
 
@@ -34,6 +36,33 @@ GUILD_ID = int(config['app']['guildId'])
 @slash.slash(name='ping', description='Test', guild_ids=[GUILD_ID])
 async def ping(ctx):
     await ctx.send('pong')
+
+
+@slash.slash(name='missing', description="Check who's missing", guild_ids=[GUILD_ID], options=[
+    create_option(
+        name="voice_channel",
+        description="The name of a voice channel to find missing participants",
+        option_type=7,
+        required=True
+    )
+])
+async def get_missing_participants(ctx, voice_channel: discord.VoiceChannel):
+    try:
+        restricted_member_ids = config['app']['restrictedMemberIds']
+        service = ParticipantsService(bot)
+
+        members = service.get(voice_channel, GUILD_ID, restricted_member_ids)
+        if len(members) == 0:
+            await ctx.send("Ev'ryone is h're")
+            return
+
+        message = f'{members[0].mention}'
+        for member in members[1:]:
+            message += f', {member.mention}'
+
+        await ctx.send(message)
+    except Exception as e:
+        await ctx.send(format_exception(e))
 
 
 @slash.slash(name='proclaim', description='Hear the prediction for the next week', guild_ids=[GUILD_ID])
