@@ -11,12 +11,12 @@ class ScripterService:
     def __init__(self, discord_client: commands.Bot) -> None:
         self._discord_client = discord_client
 
-    def get(self, guild_id: int, forbidden_member_ids: list[int] = []) -> Optional[discord.Member]:
+    def get(self, guild_id: int, restricted_member_ids: list[int] = []) -> Optional[discord.Member]:
         guild_service = GuildService(self._discord_client)
         members = guild_service.get_online_members(guild_id)
 
-        if forbidden_member_ids:
-            members = [x for x in members if x not in forbidden_member_ids]
+        if restricted_member_ids:
+            members = [x for x in members if x not in restricted_member_ids]
 
         member_count = len(members)
         if member_count == 0:
